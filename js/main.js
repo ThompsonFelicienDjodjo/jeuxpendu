@@ -74,21 +74,47 @@ const init =() => {
 const checkLetter = (letter) => {
     console.log(letter);
     let isLetterInWord = false;
+    let isAllLettersFound = true;
     console.log('isLetterWord before loop', isLetterInWord);
     wordMapping.forEach((letterMapping) => {
         if (letterMapping.letter === letter) {
             letterMapping.isVisible = true;
             isLetterInWord = true;
         }
+        if (!letterMapping.isVisible) {
+            isAllLettersFound = false;
+        }
     });
+    choicesMapping.forEach((letterMapping) => {
+        if (letterMapping.letter === letter) {
+            letterMapping.isChosen = true;
+        }
+    });
+    displayChoices(choicesMapping);
     if(isLetterInWord === true) {
         displayWord(wordMapping);
     } else {
         scoreCount++;
         displayScore();
     }
+
+    if (scoreCount === maxScore) {
+        endGame();
+    }
+    if (isAllLettersFound) {
+        winGame();
+    }
     console.log('isLetterWord after loop', isLetterInWord);
 };
+const endGame = () => {
+    wordMapping.forEach(w => w.isVisible = true);
+    displayWord(wordMapping);
+  document.querySelector('body').style.backgroundColor = 'red';
+  els.choices.innerHTML = `<h1> you dead, bro!</h1>`;
+};
+const winGame = () => {
+    els.choices.innerHTML = `<h1>You live!</h1>`;
+}
 
 const displayScore = () => {
     els.score.innerHTML = `${scoreCount} / ${maxScore}`;
