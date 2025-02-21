@@ -5,15 +5,17 @@ const els ={
 };
 
 const words = [
-    'JavaScript', // words [0]
-    'Language', // words [1]
-    'Bootstrap', // words[2]
+    'JAVASCRIPT', // words [0]
+    'LANGUAGE', // words [1]
+    'BOOTSTRAP', // words[2]
 ];
 
 let choices = [];
 let word = '';
 let wordMapping = [];
 let choicesMapping = [];
+let scoreCount = 0;
+let maxScore = 7;
 
 const init =() => {
     console.log('>> #init');
@@ -45,9 +47,51 @@ const init =() => {
     displayChoices(choicesMapping);
 
     //Afficher les erreurs
+    displayScore();
+
     // Ecouter les événements
+    els.choices.addEventListener('click', ({target}) => {
+       if (target.matches('li')) {
+           checkLetter(target.innerHTML);
+
+       }
+    });
+
+   document.addEventListener('keydown', ({keyCode}) =>{
+       //evt:KeyboardEvent evt.keyCode => { keyCode}
+       console.log('keyCode', keyCode);
+       const letter = String.fromCharCode(keyCode);
+       console.log('letter', letter);
+       checkLetter(letter);
+       if (keyCode >= 65 && keyCode <= 90) {
+           checkLetter(letter);
+       }
+   });
 
     // Vérifier la lettre: si elle ne fait pas partis des mots ajouter aux erreurs dans le cas contraire on affiche la lettre du mot
+};
+
+const checkLetter = (letter) => {
+    console.log(letter);
+    let isLetterInWord = false;
+    console.log('isLetterWord before loop', isLetterInWord);
+    wordMapping.forEach((letterMapping) => {
+        if (letterMapping.letter === letter) {
+            letterMapping.isVisible = true;
+            isLetterInWord = true;
+        }
+    });
+    if(isLetterInWord === true) {
+        displayWord(wordMapping);
+    } else {
+        scoreCount++;
+        displayScore();
+    }
+    console.log('isLetterWord after loop', isLetterInWord);
+};
+
+const displayScore = () => {
+    els.score.innerHTML = `${scoreCount} / ${maxScore}`;
 };
 
 const displayChoices = (choicesMapping) => {
@@ -94,10 +138,15 @@ const getWordMapping = (word) => {
     const wordArr = word.split('');
     console.log('word', word);
     console.log('wordArr', wordArr);
-    const wordMapping = wordArr.map((letter) =>{
+    const wordMapping = wordArr.map((letter, index) =>{
+        let isVisible = false;
+        if (index === 0 || index === word.length -1 ) {
+            isVisible = true;
+        }
+
         return{
             letter,
-            isVisible: false
+            isVisible
         };
     });
     return wordMapping;
