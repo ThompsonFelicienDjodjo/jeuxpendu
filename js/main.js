@@ -12,7 +12,8 @@ const words = [
 
 let choices = [];
 let word = '';
-
+let wordMapping = [];
+let choicesMapping = [];
 
 const init =() => {
     console.log('>> #init');
@@ -25,15 +26,43 @@ const init =() => {
     //Choisir un mot
     word = pickWord ();
     console.log('word', word);
+    //- création d'une carte de mot
+    wordMapping = getWordMapping(word);
+    console.log('wordMapping', wordMapping);
+
     //Générer toutes les lettres pour avoir le choix
     choices = generateChoices ();
     console.log(choices);
+
+    //- Création d'une carte de choix
+    choicesMapping = getChoicesMapping(choices);
+    console.log(choicesMapping);
+
     //Afficher les mots
+    displayWord(wordMapping);
+
     //Afficher les choix
+    displayChoices(choicesMapping);
+
     //Afficher les erreurs
     // Ecouter les événements
 
     // Vérifier la lettre: si elle ne fait pas partis des mots ajouter aux erreurs dans le cas contraire on affiche la lettre du mot
+};
+
+const displayChoices = (choicesMapping) => {
+
+};
+
+const displayWord = (wordMapping) => {
+    const wordHtml = wordMapping.map((letterMapping) => {
+        if (letterMapping.isVisible == true) {
+            return `<li>${letterMapping.letter}</li>`;
+        } else {
+            return `<li>_</li>`
+        }
+    });
+    els.choices.querySelector('ul').innerHTML = wordHtml;
 };
 
 const generateChoices = () => {
@@ -43,6 +72,29 @@ const generateChoices = () => {
     }
     return choices;
 };
+
+const getChoicesMapping = (choices) => {
+    const choicesMapping = choices.map((letter) => {
+        return {
+            letter,
+            isChosen: false
+        };
+    });
+    return choicesMapping;
+}
+
+const getWordMapping = (word) => {
+    const wordArr = word.split('');
+    console.log('word', word);
+    console.log('wordArr', wordArr);
+    const wordMapping = wordArr.map((letter) =>{
+        return{
+            letter,
+            isVisible: false
+        };
+    });
+    return wordMapping;
+}
 
 const pickWord = () => {
     const randomIndex = getRandomInt(0, words.length - 1);
