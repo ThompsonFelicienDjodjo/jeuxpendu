@@ -1,0 +1,4 @@
+#choices li, #answer li {
+    display: inline-block;
+    margin: 10px;
+}

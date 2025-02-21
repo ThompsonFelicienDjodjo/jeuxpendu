@@ -51,18 +51,25 @@ const init =() => {
 };
 
 const displayChoices = (choicesMapping) => {
-
+    const choicesHTML = choicesMapping.map((letterMapping) => {
+        if (letterMapping.isChosen === false) {
+            return `<li>${letterMapping.letter}</li>`;
+        } else {
+            return `<li class="disabled">${letterMapping.letter}</li>`;
+        }
+    });
+    els.choices.querySelector('ul').innerHTML = choicesHTML.join('');
 };
 
 const displayWord = (wordMapping) => {
     const wordHtml = wordMapping.map((letterMapping) => {
-        if (letterMapping.isVisible == true) {
+        if (letterMapping.isVisible === true) {
             return `<li>${letterMapping.letter}</li>`;
         } else {
-            return `<li>_</li>`
+            return `<li>_</li>`;
         }
     });
-    els.choices.querySelector('ul').innerHTML = wordHtml;
+    els.answer.querySelector('ul').innerHTML = wordHtml;
 };
 
 const generateChoices = () => {
